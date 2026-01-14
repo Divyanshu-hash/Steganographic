@@ -167,46 +167,41 @@ npm run dev
 ## 🔗 API Endpoints Overview
 ### Health
 
-GET /health
+  GET /health
 
 ### Auth
 
-POST /auth/register
-
-POST /auth/login
+  POST /auth/register
+  
+  POST /auth/login
 
 ### Media
 
-POST /media/encode/text
-
-POST /media/encode/image
-
-POST /media/encode/audio
-
-POST /media/decode
-
-GET /media/download/{file_path}
+  POST /media/encode/text
+  
+  POST /media/encode/image
+  
+  POST /media/encode/audio
+  
+  POST /media/decode
+  
+  GET /media/download/{file_path}
 
 ## ✅ Current Status
 
-✅ Backend working
-
-✅ Frontend connected
-
-✅ Authentication working
-
-✅ Encoding & decoding working
+- Backend working
+- Frontend connected
+- Authentication working
+- Encoding & decoding working
 
 ### 🔜 Planned Features
 
-User history
-
-Profile & dashboard enhancements
+- User history
+- Profile & dashboard enhancements
 
 ## 👨‍💻 Author
 
 Divyanshu Giri
-Engineering Student | Full-Stack Developer
 
 ## 📜 License
 
