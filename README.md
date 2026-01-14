@@ -156,3 +156,60 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
+###🔹 Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## 🔗 API Endpoints Overview
+### Health
+
+GET /health
+
+### Auth
+
+POST /auth/register
+
+POST /auth/login
+
+### Media
+
+POST /media/encode/text
+
+POST /media/encode/image
+
+POST /media/encode/audio
+
+POST /media/decode
+
+GET /media/download/{file_path}
+
+## ✅ Current Status
+
+✅ Backend working
+
+✅ Frontend connected
+
+✅ Authentication working
+
+✅ Encoding & decoding working
+
+### 🔜 Planned Features
+
+User history
+
+Profile & dashboard enhancements
+
+## 👨‍💻 Author
+
+Divyanshu Giri
+Engineering Student | Full-Stack Developer
+
+## 📜 License
+
+This project is licensed under the MIT License.
+```
+
