@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from fastapi.responses import FileResponse
 from app.services.storage import save_file
 from app.stego.encoder import encode_bytes
@@ -10,13 +10,17 @@ import os
 
 router = APIRouter(prefix="/media", tags=["Media"])
 
+# ===================== TEXT ENCODE =====================
 @router.post("/encode/text")
-def text_to_image(image: UploadFile = File(...), text: str = ""):
-    img_path = save_file(image)
+def text_to_image(
+    cover_image: UploadFile = File(...),
+    message: str = Form(...)
+):
+    img_path = save_file(cover_image)
     img_path = normalize_image(img_path)
 
-    out = f"uploads/encoded_text.png"
-    encode_bytes(img_path, text.encode(), out)
+    out = "uploads/encoded_text.png"
+    encode_bytes(img_path, message.encode(), out)
 
     clean_path = out.replace("\\", "/")
 
@@ -26,17 +30,22 @@ def text_to_image(image: UploadFile = File(...), text: str = ""):
         "download_url": f"/media/download/{clean_path}"
     }
 
+
+# ===================== IMAGE ENCODE =====================
 @router.post("/encode/image")
-def image_to_image(carrier: UploadFile = File(...), hidden: UploadFile = File(...)):
-    carrier_path = normalize_image(save_file(carrier))
-    hidden_path = save_file(hidden)
+def image_to_image(
+    cover_image: UploadFile = File(...),
+    hidden_image: UploadFile = File(...)
+):
+    carrier_path = normalize_image(save_file(cover_image))
+    hidden_path = save_file(hidden_image)
 
     with open(hidden_path, "rb") as f:
         data = f.read()
 
     carrier_ready = resize_carrier_for_payload(carrier_path, len(data) + 10)
 
-    out = f"uploads/encoded_image.png"
+    out = "uploads/encoded_image.png"
     encode_bytes(carrier_ready, data, out)
 
     clean_path = out.replace("\\", "/")
@@ -48,21 +57,24 @@ def image_to_image(carrier: UploadFile = File(...), hidden: UploadFile = File(..
     }
 
 
+# ===================== AUDIO ENCODE =====================
 @router.post("/encode/audio")
-def audio_to_image(image: UploadFile = File(...), audio: UploadFile = File(...)):
-    carrier = normalize_image(save_file(image))
-    audio_path = save_file(audio)
+def audio_to_image(
+    cover_image: UploadFile = File(...),
+    audio_file: UploadFile = File(...)
+):
+    carrier = normalize_image(save_file(cover_image))
+    audio_path = save_file(audio_file)
 
     with open(audio_path, "rb") as f:
         audio_bytes = f.read()
 
     carrier_ready = resize_carrier_for_payload(carrier, len(audio_bytes) + 10)
 
-    out = f"uploads/encoded_audio.png"
+    out = "uploads/encoded_audio.png"
     encode_bytes(carrier_ready, audio_bytes, out)
 
     clean_path = out.replace("\\", "/")
-
 
     return {
         "success": True,
@@ -71,9 +83,12 @@ def audio_to_image(image: UploadFile = File(...), audio: UploadFile = File(...))
     }
 
 
+# ===================== DECODE =====================
 @router.post("/decode")
-def decode(image: UploadFile = File(...)):
-    img_path = save_file(image)
+def decode(
+    encoded_image: UploadFile = File(...)
+):
+    img_path = save_file(encoded_image)
     payload = decode_from_image(img_path)
 
     file_type, ext = detect_file_type(payload)
@@ -93,7 +108,6 @@ def decode(image: UploadFile = File(...)):
 
     clean_path = out_path.replace("\\", "/")
 
-
     return {
         "success": True,
         "type": file_type.upper(),
@@ -101,6 +115,7 @@ def decode(image: UploadFile = File(...)):
     }
 
 
+# ===================== DOWNLOAD =====================
 @router.get("/download/{file_path:path}")
 def download(file_path: str):
     safe_path = file_path.replace("\\", "/")
