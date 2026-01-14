@@ -1,99 +1,158 @@
-# 🔐 Steganographic Encoder & Decoder  
-### FastAPI + React Based Secure Media Steganography System
+# 🔐 StegaCrypt  
+### Secure Steganographic Encoder & Decoder  
 
-A **production-ready steganography application** that allows users to securely hide and extract **text, images, and audio files inside images** using **LSB (Least Significant Bit) steganography**.
+**FastAPI + React | Hide Data Inside Images Securely**
 
-The system supports authentication, media uploads, automatic carrier normalization, resizing, and safe binary decoding.
+StegaCrypt is a full-stack steganography platform that allows authenticated users to securely hide and extract **text, images, and audio files** inside images using **LSB (Least Significant Bit)** steganography.
+
+The project is designed with a **modern React frontend** and a **robust FastAPI backend**, supporting authentication, file uploads, encoding/decoding, and secure downloads.
 
 ---
 
-## 🚀 Features
+## 🚀 Key Features
 
 ### 🔑 Authentication
-- User Registration & Login
-- JWT-based authentication
-- Secure password hashing
+- User Registration & Login  
+- JWT-based authentication  
+- Secure password hashing  
+- Protected routes on frontend  
 
-### 🖼️ Steganography Capabilities
+### 🖼️ Steganography Operations
 - **Text → Image**
 - **Image → Image**
-- **Audio → Image (MP3 / WAV)**
-- **Decode hidden data from image**
+- **Audio → Image** (MP3 / WAV / others)
+- Decode hidden content from image  
 
 ### 🧠 Smart Processing
-- JPG/JPEG → PNG normalization (lossless safety)
-- Automatic carrier resizing if payload is large
-- Length-prefixed binary encoding (no data corruption)
-- File-signature based decoding (text / image / audio)
+- Automatic image normalization (JPG → PNG)
+- Carrier image resizing for large payloads
+- Binary-safe encoding & decoding
+- File-type detection during decoding  
 
-### 📥 Download Support
-- Decoded images/audio available via secure download URLs
-- Cross-platform path handling (Windows/Linux)
+### 📥 Download System
+- Encoded & decoded files downloadable via API
+- Cross-platform safe paths (Windows/Linux)
 
-### 🌐 Frontend Ready
-- REST API designed for React
+### 🌐 Frontend Ready API
+- Clean REST API for React
 - CORS enabled
-- Standardized JSON responses
-- Health check endpoint
+- Consistent JSON responses
+- `/health` endpoint for backend status
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### Backend
-- **FastAPI**
-- **Python 3.10+**
-- **Pillow (PIL)** – image processing
-- **SQLAlchemy** – database ORM
-- **JWT** – authentication
-- **Uvicorn** – ASGI server
+- FastAPI
+- Python 3.10+
+- SQLAlchemy
+- JWT Authentication
+- Pillow (PIL) – Image processing
+- Uvicorn – ASGI server
 
 ### Frontend
-- **React (planned / integrated separately)**
-- **Axios / Fetch API**
+- React (Vite)
+- Tailwind CSS
+- Context API (Authentication handling)
+- Fetch API
+- Lucide Icons
 
 ---
 
-## 🧩 Project Architecture
-
-
+## 📁 Project Structure
+```bash
+Steganographic/
+│
+├── backend/
+│   ├── app/
+│   │   ├── auth/
+│   │   │   ├── router.py
+│   │   │   ├── schemas.py
+│   │   │   └── service.py
+│   │   │
+│   │   ├── services/
+│   │   │   ├── router.py
+│   │   │   ├── storage.py
+│   │   │   └── utils.py
+│   │   │
+│   │   ├── stego/
+│   │   │   ├── encoder.py
+│   │   │   ├── decoder.py
+│   │   │   └── utils.py
+│   │   │
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   ├── models.py
+│   │   ├── security.py
+│   │   └── main.py
+│   │
+│   ├── uploads/
+│   ├── venv/
+│   ├── requirements.txt
+│   └── .env
+│
+├── frontend/
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   │   ├── ui/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   └── SplashScreen.jsx
+│   │   │
+│   │   ├── contexts/
+│   │   ├── hooks/
+│   │   ├── lib/
+│   │   ├── pages/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   │
+│   ├── public/
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── vite.config.js
+│
+└── README.md
+```
 
 ---
 
-## 🔬 How Steganography Works (Brief)
+## 🔬 How Steganography Works (Simple Explanation)
 
-- Uses **LSB (Least Significant Bit)** method
-- Each pixel stores **3 bits** (RGB channels)
-- Payload is prefixed with **length bytes**
-- Decoding reads exact payload size → no corruption
-- Supports **binary-safe data** (images/audio)
+- Uses **LSB (Least Significant Bit)** technique  
+- Each pixel stores bits in RGB channels  
+- Payload is prefixed with its length  
+- Decoder reads exact payload size  
+- Prevents corruption and supports binary data  
 
 ---
 
 ## ⚙️ Installation & Setup
 
-### 1️⃣ Clone Repository
+### 🔹 Backend Setup
+
+#### 1️⃣ Clone Repository
 ```bash
-git clone https://github.com/yourusername/steganography-project.git
-cd steganography-project/backend
+git clone https://github.com/yourusername/stegacrypt.git
+cd stegacrypt/backend
 ```
 
-### 2️⃣ Create Virtual Environment
+#### 2️⃣ Create Virtual Environment
 ```bash
 python -m venv venv
-source venv/bin/activate   # Linux / Mac
 venv\Scripts\activate      # Windows
+source venv/bin/activate  # Linux/Mac
 ```
 
-### 3️⃣ Install Dependencies
+#### 3️⃣ Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4️⃣ Run Backend Server
+#### 4️⃣ Run Backend Server
 ```bash
 uvicorn app.main:app --reload
 ```
 
-👨‍💻 Author
-Divyanshu Giri
