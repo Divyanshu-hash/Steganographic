@@ -1,78 +1,122 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Shield, Loader2, Mail, Lock, ArrowLeft } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+
+import {
+  Shield,
+  Loader2,
+  Mail,
+  Lock,
+  ArrowLeft,
+} from "lucide-react";
+
+/* -------------------------------------------------------------------------- */
+/*                                   COMPONENT                                */
+/* -------------------------------------------------------------------------- */
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const { register } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  /* ----------------------------- Validation -------------------------------- */
 
-    if (password !== confirmPassword) {
+  const validateForm = () => {
+    if (!email || !password || !confirmPassword) {
       toast({
-        title: 'Passwords do not match',
-        description: 'Please make sure both passwords are the same.',
-        variant: 'destructive',
+        title: "Missing information",
+        description: "Please fill in all fields.",
+        variant: "destructive",
       });
-      return;
+      return false;
     }
 
     if (password.length < 6) {
       toast({
-        title: 'Password too short',
-        description: 'Password must be at least 6 characters long.',
-        variant: 'destructive',
+        title: "Password too short",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
       });
-      return;
+      return false;
     }
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Passwords do not match",
+        description: "Please make sure both passwords are the same.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  /* ------------------------------ Submit ---------------------------------- */
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
 
     setIsLoading(true);
 
-    const result = await register(email, password);
+    try {
+      const result = await register(email, password);
 
-    if (result.success) {
+      if (!result?.success) {
+        throw new Error(
+          result?.message || "Registration failed."
+        );
+      }
+
       toast({
-        title: 'Account created!',
-        description: 'Please log in with your new credentials.',
+        title: "Account created!",
+        description: "Please log in with your new credentials.",
       });
-      navigate('/login');
-    } else {
+
+      navigate("/login", { replace: true });
+    } catch (error) {
       toast({
-        title: 'Registration failed',
-        description: result.message || 'Please try again.',
-        variant: 'destructive',
+        title: "Registration failed",
+        description: error.message,
+        variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
+
+  /* -------------------------------------------------------------------------- */
 
   return (
     <div className="min-h-screen bg-background cyber-grid flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
 
       <div className="relative z-10 w-full max-w-md">
+        {/* Back */}
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-muted-foreground 
+                     hover:text-primary transition-colors mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to home
         </Link>
 
+        {/* Card */}
         <div className="glass rounded-2xl p-8 border border-border/50">
+          {/* Logo */}
           <div className="flex items-center justify-center gap-2 mb-8">
             <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center glow-primary">
               <Shield className="w-7 h-7 text-primary" />
@@ -89,7 +133,9 @@ const Register = () => {
             Join StegaCrypt and start hiding your secrets
           </p>
 
+          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
@@ -101,11 +147,13 @@ const Register = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 bg-background/50"
+                  autoComplete="email"
                   required
                 />
               </div>
             </div>
 
+            {/* Password */}
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
@@ -117,11 +165,13 @@ const Register = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 bg-background/50"
+                  autoComplete="new-password"
                   required
                 />
               </div>
             </div>
 
+            {/* Confirm Password */}
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative">
@@ -133,11 +183,13 @@ const Register = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="pl-10 bg-background/50"
+                  autoComplete="new-password"
                   required
                 />
               </div>
             </div>
 
+            {/* Submit */}
             <Button
               type="submit"
               className="w-full glow-primary"
@@ -149,13 +201,14 @@ const Register = () => {
                   Creating account...
                 </>
               ) : (
-                'Create Account'
+                "Create Account"
               )}
             </Button>
           </form>
 
+          {/* Footer */}
           <p className="text-center text-sm text-muted-foreground mt-6">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Link to="/login" className="text-primary hover:underline">
               Sign in
             </Link>
