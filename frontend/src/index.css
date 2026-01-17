@@ -190,3 +190,148 @@
     transform: scale(1);
   }
 }
+/* ================= Splash Enhancements ================= */
+
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  top: -10%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    hsl(var(--primary) / 0.4),
+    transparent
+  );
+  animation: scan 3s linear infinite;
+}
+
+@keyframes scan {
+  to {
+    transform: translateY(120vh);
+  }
+}
+
+/* Logo */
+.logo-core {
+  width: 128px;
+  height: 128px;
+  border-radius: 1.25rem;
+  background: hsl(var(--primary) / 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 60px hsl(var(--primary) / 0.35),
+    inset 0 0 0 1px hsl(var(--primary) / 0.25);
+}
+
+/* Orbit */
+.orbit {
+  position: absolute;
+  inset: 0;
+  animation: spin 10s linear infinite;
+}
+
+.orbit-fast {
+  animation-duration: 7s;
+}
+
+.orbit-slow {
+  animation-duration: 12s;
+}
+
+.reverse {
+  animation-direction: reverse;
+}
+
+.orbit-icon {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -14px;
+  width: 22px;
+  height: 22px;
+  color: hsl(var(--primary) / 0.6);
+}
+
+/* Progress */
+.progress-track {
+  height: 4px;
+  background: hsl(var(--muted));
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    hsl(var(--primary)),
+    cyan,
+    hsl(var(--primary))
+  );
+  box-shadow: 0 0 20px hsl(var(--primary) / 0.6);
+  transition: width 0.1s linear;
+}
+
+/* Terminal blink */
+.blink {
+  animation: blink 1.5s infinite;
+}
+
+.blink.delay {
+  animation-delay: 0.6s;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* Ambient blobs */
+.ambient {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(40px);
+  opacity: 0.25;
+}
+
+.ambient-1 {
+  width: 120px;
+  height: 120px;
+  background: hsl(var(--primary));
+  bottom: 10%;
+  left: 10%;
+  animation: pulse 4s infinite;
+}
+
+.ambient-2 {
+  width: 200px;
+  height: 200px;
+  background: cyan;
+  top: 15%;
+  right: 10%;
+  animation: pulse 6s infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.4;
+    transform: scale(1.1);
+  }
+}
+
+.logo-text {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+
+  background: linear-gradient(90deg, #7efce6, #6aa8ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* 👇 makes the "g" clear */
+  -webkit-text-stroke: 0.6px rgba(0, 0, 0, 0.55);
+}

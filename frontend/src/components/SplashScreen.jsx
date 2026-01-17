@@ -1,106 +1,93 @@
-import { useEffect, useState } from 'react';
-import { Shield, Lock, Eye } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Shield, Lock, Eye } from "lucide-react";
+
+const DURATION = 3000;
 
 const SplashScreen = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const duration = 3000; // 3 seconds
-    const interval = 100;
-    const increment = (interval / duration) * 100;
+    const start = performance.now();
 
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(timer);
-          return 100;
-        }
-        return prev + increment;
-      });
-    }, interval);
+    const animate = (now) => {
+      const elapsed = now - start;
+      const value = Math.min((elapsed / DURATION) * 100, 100);
+      setProgress(value);
 
-    const timeout = setTimeout(onComplete, duration);
-
-    return () => {
-      clearInterval(timer);
-      clearTimeout(timeout);
+      if (elapsed < DURATION) {
+        requestAnimationFrame(animate);
+      } else {
+        onComplete();
+      }
     };
+
+    requestAnimationFrame(animate);
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-background cyber-grid flex flex-col items-center justify-center overflow-hidden">
-      
-      {/* Scan line effect */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent animate-scan-line" />
+    <div className="fixed inset-0 z-50 bg-background cyber-grid flex items-center justify-center overflow-hidden">
+      {/* Overlay gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-background/90 to-background" />
+
+      {/* Scan line */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="scan-line" />
       </div>
 
-      {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center gap-8 animate-fade-in">
-
-        {/* Animated logo */}
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center gap-10 fade-in">
+        {/* Logo */}
         <div className="relative">
-          <div className="w-32 h-32 rounded-2xl bg-primary/10 flex items-center justify-center glow-primary-strong animate-float">
+          <div className="logo-core animate-float">
             <Shield className="w-16 h-16 text-primary" />
           </div>
 
-          {/* Orbiting icons */}
-          <div className="absolute inset-0 animate-spin" style={{ animationDuration: '8s' }}>
-            <Lock className="absolute -top-4 left-1/2 -translate-x-1/2 w-6 h-6 text-primary/60" />
+          {/* Orbit */}
+          <div className="orbit orbit-slow">
+            <Lock className="orbit-icon" />
           </div>
-
-          <div
-            className="absolute inset-0 animate-spin"
-            style={{ animationDuration: '12s', animationDirection: 'reverse' }}
-          >
-            <Eye className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-6 h-6 text-primary/60" />
+          <div className="orbit orbit-fast reverse">
+            <Eye className="orbit-icon" />
           </div>
         </div>
 
         {/* Title */}
         <div className="text-center">
-          <h1 className="text-5xl md:text-6xl font-display gradient-text text-glow mb-2">
+          <h1 className="text-5xl md:text-6xl font-display logo-text text-glow mb-2">
             StegaCrypt
           </h1>
-          <p className="text-muted-foreground font-mono text-sm tracking-wider">
-            HIDE • PROTECT • SECURE
+          <p className="text-xs font-mono tracking-[0.3em] text-muted-foreground">
+            HIDE · PROTECT · SECURE
           </p>
         </div>
 
-        {/* Progress bar */}
-        <div className="w-64 md:w-80">
-          <div className="h-1 bg-muted rounded-full overflow-hidden">
+        {/* Progress */}
+        <div className="w-72">
+          <div className="progress-track">
             <div
-              className="h-full bg-gradient-to-r from-primary via-cyan-400 to-primary transition-all duration-100 glow-primary"
+              className="progress-bar"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <div className="flex justify-between mt-2">
-            <span className="text-xs font-mono text-muted-foreground">
-              INITIALIZING
-            </span>
-            <span className="text-xs font-mono text-primary">
+          <div className="flex justify-between mt-2 text-xs font-mono">
+            <span className="text-muted-foreground">INITIALIZING</span>
+            <span className="text-primary">
               {Math.round(progress)}%
             </span>
           </div>
         </div>
 
-        {/* Code-like text */}
+        {/* Terminal text */}
         <div className="font-mono text-xs text-muted-foreground/50 text-center space-y-1">
-          <p className="animate-pulse">loading encryption modules...</p>
-          <p className="animate-pulse" style={{ animationDelay: '0.5s' }}>
-            establishing secure connection...
-          </p>
+          <p className="blink">loading encryption modules...</p>
+          <p className="blink delay">establishing secure channel...</p>
         </div>
       </div>
 
-      {/* Background decorations */}
-      <div className="absolute bottom-10 left-10 w-20 h-20 rounded-full bg-primary/5 blur-xl animate-pulse" />
-      <div
-        className="absolute top-20 right-20 w-32 h-32 rounded-full bg-primary/5 blur-xl animate-pulse"
-        style={{ animationDelay: '1s' }}
-      />
+      {/* Ambient blobs */}
+      <div className="ambient ambient-1" />
+      <div className="ambient ambient-2" />
     </div>
   );
 };
