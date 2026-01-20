@@ -60,6 +60,8 @@ The project is designed with a **modern React frontend** and a **robust FastAPI 
 
 ---
 
+## 🎥 Project Demo
+
 ## 📁 Project Structure
 ```bash
 Steganographic/
