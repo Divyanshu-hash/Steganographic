@@ -34,6 +34,7 @@ venv/
 .venv/
 env/
 ENV/
+!.env.example
 
 # =========================
 # Django
